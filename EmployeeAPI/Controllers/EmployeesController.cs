@@ -14,7 +14,7 @@ namespace EmployeeAPI.Controllers
 {
     public class EmployeesController : ApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private IdentityModels db = new IdentityModels();
 
         // GET: api/Employees
         public IQueryable<Employee> GetempData()

@@ -19,16 +19,16 @@ namespace EmployeeAPI.Models
         }
     }
 
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class IdentityModels : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+        public IdentityModels()
+            : base("name = EmployeeAPI", throwIfV1Schema: false)
         {
         }
         public DbSet<Employee> empData { get; set; }
-        public static ApplicationDbContext Create()
+        public static IdentityModels Create()
         {
-            return new ApplicationDbContext();
+            return new IdentityModels();
         }
     }
 }
