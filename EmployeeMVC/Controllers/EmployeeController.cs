@@ -61,12 +61,12 @@ namespace EmployeeMVC.Controllers
         [HttpPost]
         public async Task<ActionResult> Create(Employee emp)
         {
-            using (HttpResponseMessage response = await APIHelper.client.PostAsJsonAsync("api/Employees",emp))
+            using (HttpResponseMessage response = await APIHelper.client.PostAsJsonAsync("api/Employees", emp))
             {
                 if (response.IsSuccessStatusCode)
                 {
-                     
-                    return View();
+                    var empList = response.Content.ReadAsAsync<IEnumerable<Employee>>().Result;
+                    return View(empList);
                 }
                 else
                 {
@@ -77,47 +77,63 @@ namespace EmployeeMVC.Controllers
         }
 
         // GET: Employee/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            using (HttpResponseMessage response = await APIHelper.client.GetAsync("api/Employees/" + id.ToString()))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    var empList = response.Content.ReadAsAsync<Employee>().Result;
+                    return View(empList);
+                }
+                else
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
         }
 
         // POST: Employee/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public async Task<ActionResult> Edit(int id, Employee emp)
         {
-            try
+            using (HttpResponseMessage response = await APIHelper.client.PutAsJsonAsync("api/Employees/" + id.ToString(), emp))
             {
-                // TODO: Add update logic here
+                if (response.IsSuccessStatusCode)
+                {
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
+                    var empList = response.Content.ReadAsAsync<Employee>().Result;
+                    return RedirectToAction("index");
+                }
+                else
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+
             }
         }
 
-        // GET: Employee/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
         // POST: Employee/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public async Task<ActionResult> Delete(int id)
         {
-            try
+            using (HttpResponseMessage response = await APIHelper.client.DeleteAsync("api/Employees/" + id.ToString()))
             {
-                // TODO: Add delete logic here
+                if (response.IsSuccessStatusCode)
+                {
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+
             }
         }
+
+
+
     }
 }
